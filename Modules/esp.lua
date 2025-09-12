@@ -1,4 +1,25 @@
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local Workspace = game:GetService("Workspace")
+local localPlayer = Players.LocalPlayer
+local Camera = Workspace.CurrentCamera
 local drawTracers = {}
+local teammates = {}
+local enemies = {}
+
+local function updateCache()
+    teammates = {}
+    enemies = {}
+    for _, p in ipairs(Players:GetPlayers()) do
+        if p ~= localPlayer and p.Team and p.Character and p.Character.Parent == Workspace then
+            if p.Team == localPlayer.Team then
+                table.insert(teammates, p)
+            else
+                table.insert(enemies, p)
+            end
+        end
+    end
+end
 
 local function getTracer(player, color)
     if not drawTracers[player] then
@@ -17,25 +38,26 @@ local function clearTracers()
     end
 end
 
-Run.Heartbeat:Connect(function()
-    -- если master выключен = выключаем всё
-    if not getgenv().espEnabled then
+Players.PlayerAdded:Connect(updateCache)
+Players.PlayerRemoving:Connect(updateCache)
+if localPlayer.Character then updateCache() end
+localPlayer.CharacterAdded:Connect(updateCache)
+
+RunService.Heartbeat:Connect(function()
+    if not getgenv().espEnabled or not localPlayer:GetAttribute("Match") then
         clearTracers()
         return
     end
 
-    -- если tracers отключены, то тоже убираем
     if not getgenv().espTracers then
         clearTracers()
     end
 
-    -- тут твой код ESP
-    if getgenv().espEnemies then
-        for _, player in ipairs(enemies) do
+    if getgenv().espTeamMates then
+        for _, player in ipairs(teammates) do
             local char = player.Character
             local hrp = char and char:FindFirstChild("HumanoidRootPart")
             if hrp then
-                -- highlight ESP для врагов
                 local hl = char:FindFirstChild("ESPHighlight")
                 if not hl then
                     hl = Instance.new("Highlight")
@@ -43,24 +65,48 @@ Run.Heartbeat:Connect(function()
                     hl.Parent = char
                 end
                 hl.Enabled = true
-                hl.FillColor = Color3.fromRGB(255, 41, 121)
-                hl.OutlineColor = Color3.fromRGB(127, 20, 60)
-
-                -- tracers
+                hl.FillColor = Color3.fromRGB(30,214,134)
+                hl.OutlineColor = Color3.fromRGB(15,107,67)
                 if getgenv().espTracers then
-                    local cam = Workspace.CurrentCamera
-                    local pos, onScreen = cam:WorldToViewportPoint(hrp.Position)
+                    local pos, onScreen = Camera:WorldToViewportPoint(hrp.Position)
                     if onScreen then
-                        local tracer = getTracer(player, Color3.fromRGB(255, 255, 255))
-                        tracer.From = Vector2.new(cam.ViewportSize.X/2, cam.ViewportSize.Y)
+                        local tracer = getTracer(player, Color3.fromRGB(0,0,255))
+                        tracer.From = Vector2.new(Camera.ViewportSize.X/2, Camera.ViewportSize.Y)
                         tracer.To = Vector2.new(pos.X, pos.Y)
                         tracer.Visible = true
                     end
                 end
             else
-                if drawTracers[player] then
-                    drawTracers[player].Visible = false
+                if drawTracers[player] then drawTracers[player].Visible = false end
+            end
+        end
+    end
+
+    if getgenv().espEnemies then
+        for _, player in ipairs(enemies) do
+            local char = player.Character
+            local hrp = char and char:FindFirstChild("HumanoidRootPart")
+            if hrp then
+                local hl = char:FindFirstChild("ESPHighlight")
+                if not hl then
+                    hl = Instance.new("Highlight")
+                    hl.Name = "ESPHighlight"
+                    hl.Parent = char
                 end
+                hl.Enabled = true
+                hl.FillColor = Color3.fromRGB(127,20,60)
+                hl.OutlineColor = Color3.fromRGB(255,41,121)
+                if getgenv().espTracers then
+                    local pos, onScreen = Camera:WorldToViewportPoint(hrp.Position)
+                    if onScreen then
+                        local tracer = getTracer(player, Color3.fromRGB(255,255,255))
+                        tracer.From = Vector2.new(Camera.ViewportSize.X/2, Camera.ViewportSize.Y)
+                        tracer.To = Vector2.new(pos.X, pos.Y)
+                        tracer.Visible = true
+                    end
+                end
+            else
+                if drawTracers[player] then drawTracers[player].Visible = false end
             end
         end
     end
