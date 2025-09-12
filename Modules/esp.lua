@@ -140,4 +140,24 @@ Connections[1] = RunService.Heartbeat:Connect(function()
 	end
 end)
 
+local function cleanup()
+    for _, p in ipairs(Players:GetPlayers()) do
+        if p.Character then
+            local h = p.Character:FindFirstChild("ESPHighlight")
+            if h then h:Destroy() end
+            local hrp = p.Character:FindFirstChild("HumanoidRootPart")
+            if hrp then
+                local eb = hrp:FindFirstChild("EnemyBillboard")
+                if eb then eb:Destroy() end
+            end
+        end
+    end
+    for _, line in pairs(drawTracers) do
+        line.Visible = false
+    end
+end
+
+Connections.cleanup = cleanup
+return Connections
+
 return Connections
