@@ -28,7 +28,7 @@ if getgenv().antistealer then
 end
 
 task.spawn(function()
-    while task.wait() do
+    while task.wait(0.1) do
         if not humPart or not humPart.Parent then continue end
         local closest, shortest = nil, math.huge
         for _, obj in ipairs(workspace:GetDescendants()) do
