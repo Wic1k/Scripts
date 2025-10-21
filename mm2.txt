@@ -26,7 +26,7 @@ end)
 local Window = WindUI:CreateWindow({
     Title = "Wicik | Murder Mystery 2",
     Icon = "skull",
-    Author = "v1.0 | Murder Mystery 2",
+    Author = "v1.1 | Murder Mystery 2",
     Folder = "",
     Size = wicikhub,
     Transparent = false,
@@ -35,7 +35,7 @@ local Window = WindUI:CreateWindow({
 })
 
 Window:EditOpenButton({
-    Title = "Wicik | v1.0",
+    Title = "Wicik | v1.1",
     Icon = "monitor",
     CornerRadius = UDim.new(0,16),
     StrokeThickness = 2,
@@ -69,7 +69,7 @@ local antisteal = Window:Tab({
 })
 
 auto:Paragraph({
-    Title = 'Wicik Hub | v1.0',
+    Title = 'Wicik Hub | v1.1',
     Desc = "💻 Made by Wicik Hub",
     Image = "zap",
     RichText = true,
