@@ -161,7 +161,7 @@ auto:Toggle({
                 end
             end)
         else
-            statsParagraph:SetDesc("Collected: 0 | Time Active: 0s | Coins/Hour: 0")
+            statspp:SetDesc("Collected: 0 | Time Active: 0s | Coins/Hour: 0")
         end
     end
 })
