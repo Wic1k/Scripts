@@ -157,7 +157,7 @@ auto:Toggle({
                             collected += 1
                         end
                     end
-                    task.wait(0.1) -- if u have issues with fps set higher
+                    task.wait(0.3) -- if u have issues with fps set higher
                 end
             end)
         else
