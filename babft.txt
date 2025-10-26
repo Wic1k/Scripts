@@ -13,7 +13,7 @@ end
 
 if isfile("Wicik/key.txt") then
     local file = readfile("Wicik/key.txt")
-    if file == "sobaka" then
+    if file == "wicked" then
         loadstring(game:HttpGet(scripturl))()
         showGUI = false
     end
@@ -60,7 +60,7 @@ if showGUI then
         end
     })
 
-    Tabs.KeyTab:AddKeyBox("sobaka", function(Success, ReceivedKey)
+    Tabs.KeyTab:AddKeyBox("wicked", function(Success, ReceivedKey)
         if Success then
             writefile("Wicik/key.txt", ReceivedKey)
 			Obsidian:Unload()
